@@ -1,0 +1,99 @@
+<body>
+    <script>
+
+        function Student(name, surname, birthyear) {
+            this.name = name;
+            this.surname = surname;
+            this.birthyear = birthyear;
+            this.attendanceArr = [];
+            this.marksArr = [];
+
+
+
+        };
+
+
+
+
+        Student.prototype.present = function () {
+            if (this.attendanceArr.length >= 10) {
+                return
+            }
+            this.attendanceArr[this.attendanceArr.length] = true   
+
+        };
+
+        Student.prototype.absent = function () {
+            if (this.attendanceArr.length >= 10) {
+                return
+            }
+            this.attendanceArr[this.attendanceArr.length] = false
+        };
+
+        Student.prototype.mark = function (value) {
+            if (this.marksArr.length >= 10) {
+                return
+            }
+            this.marksArr[this.marksArr.length] = value;
+        };
+
+
+
+
+
+        Student.prototype.summary = function () {
+            let attIndex = this.attendanceArr.filter((item) => item === true).length / this.attendanceArr.length
+
+            console.log(attIndex);
+
+            let marksAvg = this.marksArr.reduce((acc, item) => acc + item, 0 ) / this.marksArr.length;
+            console.log(marksAvg);
+
+            if (attIndex >= 0.9 && marksAvg >= 9) {
+                console.log('EXCELLENT');
+                return
+            }
+            
+
+            else if (attIndex >= 0.9 || marksAvg >= 9) {
+                console.log('VERY GOOD');
+                return
+            }
+
+
+            return console.log('SATISFACTIORILY');
+
+        };
+
+        
+        const ivan = new Student('Ivan', 'Petov', 2000);
+        ivan.present();
+        ivan.present();
+        ivan.absent();
+        ivan.present();
+        ivan.present();
+        ivan.present();
+        ivan.present();
+        ivan.present();
+        ivan.present();
+        ivan.present();
+        ivan.mark(9);
+        ivan.mark(7);
+        ivan.mark(10);
+        ivan.mark(10);
+        ivan.mark(10);
+        ivan.mark(10);
+        ivan.mark(9);
+        ivan.mark(10);
+        ivan.mark(10);
+        ivan.mark(10);
+        ivan.mark(10);
+        ivan.summary();
+
+        console.log(ivan);
+
+
+
+
+    </script>
+</body>
