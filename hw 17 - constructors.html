@@ -19,7 +19,7 @@
             if (this.attendanceArr.length >= 10) {
                 return
             }
-            this.attendanceArr[this.attendanceArr.length] = true   
+            this.attendanceArr[this.attendanceArr.length] = true  //записываем true в массив attendanceArr под индексом length - первое значение станет на 0-й индекс, а второе значение, при имеющемся записанном первом значении на нулевой индекс (lenght станет 1), значит значение запишется на 1-й индекс, а length стане 2, третье значение запишется на 2-й индекс 
 
         };
 

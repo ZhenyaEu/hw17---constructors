@@ -1,0 +1,126 @@
+<body>
+    <script>
+        // РЕШЕНИЕ Д/З ПРО СТУДЕНТОВ С ПОМОЩЬЮ КЛАССОВ 
+
+
+        class StudentGroup {
+           static lessonValue = 4;  //у функции класса StudentGroup есть свойство lessoncount и для этого в классе StudentClass мы обращаемся к этому свойству, как к классу. Можно сделать его не статическим, а динамическим, указав const frontEnd = new StudentGroup('Front-End', 36); и засэтить внутри конструктора constructor(name, 36)...... 
+
+            students = [];   // создаём пустой массив, куда будут пушиться студенты
+
+            constructor(name) {
+                this.name = name;    // у студенческой группы будет имя, "Front-End"
+            }
+
+            addStudent(student) {
+                if (!(student instanceof StudentClass)) {   // добавлять студентов только из StudentClass
+                    throw new Error('Incorrect type');
+                }
+
+                this.students.push(student);
+            }
+
+            get rating() {                        // выведем как свойство, чтобы к нему обратиться, т.е. чтобы вывели frontEnd.rating и всё заработало, а сам подсчёт будет в #calcRating() так как в get вести подсчёт плохая идея. Чтобы вывести как свойство, а на самом деле происходит подсчёт
+                return this.#calcRating();
+            }
+
+            #calcRating() {   // # приватное свойство, доступа извне нет
+                const studentWithRating = this.students.map(student => {  // чтобы сравнивать нужны числа, преобразуем массив заполненный true true true в массив другого типа с помощью метода map
+                    const present = student.presents.reduce((res, value) => res += value, 0); // reduce подсчитает сумму true и запишется эта сумма в переменную present. value это значения в массиве presents
+
+                    return {
+                        name: student.name,
+                        surname: student.surname,
+                        present  //present будет результатом применения reduce к массиву presents
+                    }
+                });
+
+                studentWithRating.sort((a, b) => b.present - a.present); // сортировка студентов по убыванию рейтинга. вывдет массив объектов не показывая массивы presents и marks, чтобы это исправить введём третий массив кодом ниже
+
+                const result = [];  // создание ещё одного массива (не самое оптимальное решение, но для понимания классов нармально) для того чтобы пройтись по массиву studentWithRating.sort и вывести студентов сортированный по убыванию рейтинга
+
+                for (const student of studentWithRating) {
+                    const x = this.students.find(({ name, surname}) => student.name === name && student.surname === surname);
+
+                    result.push(x);
+                }
+
+                return result; 
+            }
+
+
+        }
+
+
+
+        class StudentClass {
+            
+            constructor(name, surname, bday, lessonCount) {
+                this.name = name;
+                this.surname = surname;
+                this.bday = bday;
+
+                this.marks = new Array(lessonCount).fill(null);   // lessonCount будет задаваться динамически при создании студента, студент может быть зачислен в группы с разным количеством занятий lessonValue
+                this.presents = new Array(lessonCount).fill(null)
+
+            }
+
+            setMark(value) {
+                if (value < 0 || value > 10) throw new Error('Out of range');
+
+                this.#setValueToArray(this.marks, value);
+
+                return this.marks;
+            }
+
+            setPresent(lessonCount) {
+                this.#setValueToArray(this.presents, true, lessonCount);
+                return this.presents;
+            }
+
+            setAbsent(lessonCount) {
+                this.#setValueToArray(this.presents, true, lessonCount);
+                return this.presents;
+            }
+
+            #setValueToArray(array, value, count) {
+                if (count) {
+                    for (let index = 0; index < count - 1; index++) {    // count-1 связано с тем, что индекс начинается с нуля. Пример: если передан count 4, то заполни индексы от 0 до 3 значениями true
+                        this.presents[index] = value;   // заполняем значения под индексы . Пример: arr = [a, b, c]; arr[1] = b
+                    }
+                }
+
+                const index = array.findIndex((x) => x === null);
+
+                if (index === -1) return;
+
+                array[index] = value;
+            }
+
+        };
+
+
+        const olga = new StudentClass('Olga', 'Petrenko', { year: 2002 }, StudentGroup.lessonValue);
+        const ivan = new StudentClass('Ivan', 'Ivanov', { year: 2001 }, StudentGroup.lessonValue);
+        const petr = new StudentClass('Petr', 'Pyatochkin', { year: 2000 }, StudentGroup.lessonValue);
+        const alex = new StudentClass('Alex', 'Ivanenko', { year: 1998 }, StudentGroup.lessonValue);
+
+        olga.setPresent(4);
+        ivan.setPresent(1);
+        petr.setPresent(4);
+        alex.setPresent(3);
+
+        const frontEnd = new StudentGroup('Front-End');
+
+        frontEnd.addStudent(olga);
+        frontEnd.addStudent(alex);
+        frontEnd.addStudent(ivan);
+        frontEnd.addStudent(petr);
+
+        console.log(frontEnd.rating);
+
+
+
+
+    </script>
+</body>
